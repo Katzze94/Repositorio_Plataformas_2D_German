@@ -9,14 +9,9 @@ public class PlayerController : MonoBehaviour
 
     private float horizontalInput;
 
-   
-
     [SerializeField] private float characterSpeed = 4.5f;  //"f" para que el numero se entienda el float y solo si es decimal sino no hace falta
 
     [SerializeField] private float jumpForce = 10;
-
-
-
     // [SerializeField]:Para que las variables privadas salgan en el inspector
     // Start is called before the first frame update
    
@@ -24,9 +19,7 @@ public class PlayerController : MonoBehaviour
     {
         characterRigidbody = GetComponent<Rigidbody2D>();
     }
-        
     
-   
     void Start()
     {
         //characterRigidbody.AddForce(Vector2.up * jumpForce); //si lo que después del punto es minuscula es igual, si es mayúscula es parentesis
@@ -36,9 +29,19 @@ public class PlayerController : MonoBehaviour
     {
         horizontalInput = Input.GetAxis("Horizontal");
 
-         //Tambien te puedes ahorra la variable de input de salto poninedo solo en el parentesis de "if" : Input.GetButtonDown("Jump")
-
-        if(Input.GetButtonDown("Jump")) //no poner punto y coma, "=" asignar valor, "==" comprobar valor //todos los inputs de booleana necesitas un "If"
+         //Tambien te puedes ahorra la variable de input de salto poninedo solo en el parentesis de "if" : Input.GetButtonDown("Jump"), esto tambien funciona con otros inputs de botones
+        if(horizontalInput < 0)
+        {
+            transform.rotation = Quaternion.Euler(0, 180, 0);
+        }
+        else if(horizontalInput > 0)
+        {
+            transform.rotation = Quaternion.Euler(0, 0, 0);
+        }
+        
+        
+        
+        if(Input.GetButtonDown("Jump") && GroundSensor.isGrounded) //no poner punto y coma. "=" asignar valor, "==" comprobar valor //todos los inputs de booleana necesitas un "If"
         {
             characterRigidbody.AddForce(Vector2.up * jumpForce, ForceMode2D.Impulse);
         }
