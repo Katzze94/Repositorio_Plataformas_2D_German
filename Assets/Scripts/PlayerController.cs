@@ -11,6 +11,8 @@ public class PlayerController : MonoBehaviour
 
     private float horizontalInput;
 
+    [SerializeField] private int healthPoints = 3;
+
     [SerializeField] private float characterSpeed = 4.5f;  //"f" para que el numero se entienda el float y solo si es decimal sino no hace falta
 
     [SerializeField] private float jumpForce = 10;
@@ -67,12 +69,34 @@ public class PlayerController : MonoBehaviour
     }
 
 
+    
+    void TakeDamage()
+    {
+        healthPoints--;
+
+        if(healthPoints == 0) Die();
+        
+        characterAnimator.SetTrigger("IsHurt");  //resta de 1 en 1 al valor actual
+       
+        
+             
+    }
+    
+    void Die()
+    {
+        characterAnimator.SetBool("IsDead", true);
+        Destroy(gameObject, 0.47f);
+    }
+    
+    
      void OnCollisionEnter2D(Collision2D collision)
     {
         if(collision.gameObject.layer == 3)
         {
-            characterAnimator.SetTrigger("IsDead");
-            Destroy(gameObject, 0.48f);
+            TakeDamage();
+        
+            //characterAnimator.SetTrigger("IsHurt");
+           // Destroy(gameObject, 0.48f);
         }
     }
 }
