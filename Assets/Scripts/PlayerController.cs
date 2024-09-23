@@ -7,6 +7,8 @@ public class PlayerController : MonoBehaviour
 
     private Rigidbody2D characterRigidbody;
 
+    public static Animator characterAnimator;
+
     private float horizontalInput;
 
     [SerializeField] private float characterSpeed = 4.5f;  //"f" para que el numero se entienda el float y solo si es decimal sino no hace falta
@@ -18,6 +20,7 @@ public class PlayerController : MonoBehaviour
    void Awake()
     {
         characterRigidbody = GetComponent<Rigidbody2D>();
+        characterAnimator = GetComponent<Animator>();
     }
     
     void Start()
@@ -33,10 +36,16 @@ public class PlayerController : MonoBehaviour
         if(horizontalInput < 0)
         {
             transform.rotation = Quaternion.Euler(0, 180, 0);
+            characterAnimator.SetBool("IsRunning", true);
         }
         else if(horizontalInput > 0)
         {
             transform.rotation = Quaternion.Euler(0, 0, 0);
+            characterAnimator.SetBool("IsRunning", true);
+        }
+        else
+        {
+            characterAnimator.SetBool("IsRunning", false);
         }
         
         
@@ -44,7 +53,10 @@ public class PlayerController : MonoBehaviour
         if(Input.GetButtonDown("Jump") && GroundSensor.isGrounded) //no poner punto y coma. "=" asignar valor, "==" comprobar valor //todos los inputs de booleana necesitas un "If"
         {
             characterRigidbody.AddForce(Vector2.up * jumpForce, ForceMode2D.Impulse);
+            characterAnimator.SetBool("IsJumping", true);
         }
+
+    
    
     }
 
@@ -52,5 +64,15 @@ public class PlayerController : MonoBehaviour
     void FixedUpdate()
     {
         characterRigidbody.velocity = new  Vector2(horizontalInput * characterSpeed, characterRigidbody.velocity.y); 
+    }
+
+
+     void OnCollisionEnter2D(Collision2D collision)
+    {
+        if(collision.gameObject.layer == 3)
+        {
+            characterAnimator.SetTrigger("IsDead");
+            Destroy(gameObject, 0.48f);
+        }
     }
 }
