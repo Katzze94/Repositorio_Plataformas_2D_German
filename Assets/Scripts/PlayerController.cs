@@ -17,7 +17,13 @@ public class PlayerController : MonoBehaviour
 
     [SerializeField] private float jumpForce = 10;
 
+    
+
     private bool isAttacking;
+
+    [SerializeField] private Transform attackHitBox;
+
+    [SerializeField] private float attackRadius = 1;
     // [SerializeField]:Para que las variables privadas salgan en el inspector
     // Start is called before the first frame update
    
@@ -107,11 +113,31 @@ public class PlayerController : MonoBehaviour
     {
         StartCoroutine(AttackAnimation());
         characterAnimator.SetTrigger("Attack");
+
+
     }
 
     IEnumerator AttackAnimation() //sirver para parar, entre frames
     {
         isAttacking = true;
+
+        yield return new WaitForSeconds(0.2f);
+        
+        Collider2D[] collider = Physics2D.OverlapCircleAll(attackHitBox.position, attackRadius);
+       foreach(Collider2D enemy in collider)
+
+       {
+        if(enemy.gameObject.CompareTag("Mimic")) //mejor forma de utilizar los tags
+        {
+            //Destroy(enemy.gameObject);
+            Rigidbody2D enemyRigidbody = enemy.GetComponent<Rigidbody2D>();
+            enemyRigidbody.AddForce(transform.right + transform.up * 2, ForceMode2D.Impulse);
+            
+            Mimic mimic = enemy.GetComponent<Mimic>();
+
+            mimic.TakeDamage();
+        }
+       }
 
         yield return new WaitForSeconds(0.5f);
 
@@ -154,5 +180,11 @@ public class PlayerController : MonoBehaviour
             //characterAnimator.SetTrigger("IsHurt");
            // Destroy(gameObject, 0.48f);
         }
+    }
+
+    void OnDrawGizmos()
+    {
+        Gizmos.color = Color.red;
+        Gizmos.DrawWireSphere(attackHitBox.position, attackRadius);
     }
 }
