@@ -21,6 +21,8 @@ public class PlayerController : MonoBehaviour
 
     private bool isAttacking;
 
+    private bool isMoving;
+
     [SerializeField] private Transform attackHitBox;
 
     [SerializeField] private float attackRadius = 1;
@@ -64,16 +66,12 @@ public class PlayerController : MonoBehaviour
 
     void Movement()
     {
-        if(isAttacking)
-        {
-            horizontalInput = 0;
-        }
-        else
-        {
-            horizontalInput = Input.GetAxis("Horizontal");
-        }
-        
-         horizontalInput = Input.GetAxis("Horizontal");
+        if(isAttacking && !isMoving) horizontalInput = 0;
+        else horizontalInput = Input.GetAxis("Horizontal");
+
+        if(horizontalInput!=0) isMoving=true;
+        else isMoving = false;
+
 
          //Tambien te puedes ahorra la variable de input de salto poninedo solo en el parentesis de "if" : Input.GetButtonDown("Jump"), esto tambien funciona con otros inputs de botones
         if(horizontalInput < 0)
@@ -112,7 +110,10 @@ public class PlayerController : MonoBehaviour
     void Attack()
     {
         StartCoroutine(AttackAnimation());
+        if(isMoving) characterAnimator.SetBool("IsRunning", true);
         characterAnimator.SetTrigger("Attack");
+
+
 
 
     }
@@ -140,6 +141,7 @@ public class PlayerController : MonoBehaviour
        }
 
         yield return new WaitForSeconds(0.5f);
+        
 
         isAttacking = false;
     }
