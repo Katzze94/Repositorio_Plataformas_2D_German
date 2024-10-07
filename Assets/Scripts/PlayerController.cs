@@ -54,6 +54,12 @@ public class PlayerController : MonoBehaviour
         {
             Attack();
         }
+
+        if(Input.GetKeyDown(KeyCode.P))
+        {
+            GameManager.instance.Pause();
+            SoundManager.instance.PlaySFX(SoundManager.instance.pauseAudio); 
+        }
      }
 
     // Update is called once per frame
@@ -66,11 +72,11 @@ public class PlayerController : MonoBehaviour
 
     void Movement()
     {
-        if(isAttacking && !isMoving) horizontalInput = 0;
+        if(isAttacking && horizontalInput == 0) horizontalInput = 0;
         else horizontalInput = Input.GetAxis("Horizontal");
 
-        if(horizontalInput!=0) isMoving=true;
-        else isMoving = false;
+       // if(horizontalInput!=0) isMoving=true;
+        //else isMoving = false;
 
 
          //Tambien te puedes ahorra la variable de input de salto poninedo solo en el parentesis de "if" : Input.GetButtonDown("Jump"), esto tambien funciona con otros inputs de botones
@@ -103,6 +109,7 @@ public class PlayerController : MonoBehaviour
      {
         characterRigidbody.AddForce(Vector2.up * jumpForce, ForceMode2D.Impulse);
         characterAnimator.SetBool("IsJumping", true);   //no poner punto y coma. "=" asignar valor, "==" comprobar valor //todos los inputs de booleana necesitas un "If"
+        SoundManager.instance.PlaySFX(SoundManager.instance.jumpAudio); 
     }
     
 
@@ -110,7 +117,7 @@ public class PlayerController : MonoBehaviour
     void Attack()
     {
         StartCoroutine(AttackAnimation());
-        if(isMoving) characterAnimator.SetBool("IsRunning", true);
+        if(horizontalInput!=0) characterAnimator.SetBool("IsRunning", true);
         characterAnimator.SetTrigger("Attack");
 
 
@@ -147,9 +154,9 @@ public class PlayerController : MonoBehaviour
     }
     
   
-    void TakeDamage()
+    void TakeDamage(int damage)
     {
-        healthPoints--;
+        healthPoints -= damage;
 
         if(healthPoints <= 0) 
         {
@@ -158,7 +165,8 @@ public class PlayerController : MonoBehaviour
 
         else 
         {
-            characterAnimator.SetTrigger("IsHurt");  
+            characterAnimator.SetTrigger("IsHurt"); 
+            SoundManager.instance.PlaySFX(SoundManager.instance.hurtAudio); 
         }
         
 
@@ -177,7 +185,7 @@ public class PlayerController : MonoBehaviour
     {
         if(collision.gameObject.layer == 3)
         {
-            TakeDamage();
+            TakeDamage(1);
         
             //characterAnimator.SetTrigger("IsHurt");
            // Destroy(gameObject, 0.48f);
