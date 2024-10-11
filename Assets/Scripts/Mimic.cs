@@ -7,7 +7,9 @@ public class Mimic : MonoBehaviour
    
    private Rigidbody2D enemyRigidbody;
    [SerializeField] private int mimicHealthPoints = 3;
-   
+
+   private AudioSource _audioSource;
+
    
    
     // Start is called before the first frame update
@@ -19,12 +21,13 @@ public class Mimic : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        
+        SoundManager.instance.PlaySFX(_audioSource, SoundManager.instance.mimicAudio);
     }
 
     void Awake()
     {
         enemyRigidbody = GetComponent<Rigidbody2D>();
+        _audioSource = GetComponent<AudioSource>();
     }
 
 

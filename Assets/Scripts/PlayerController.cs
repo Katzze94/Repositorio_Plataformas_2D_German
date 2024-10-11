@@ -17,6 +17,7 @@ public class PlayerController : MonoBehaviour
 
     [SerializeField] private float jumpForce = 10;
 
+    private AudioSource _audioSource;
     
 
     private bool isAttacking;
@@ -33,6 +34,7 @@ public class PlayerController : MonoBehaviour
     {
         characterRigidbody = GetComponent<Rigidbody2D>();
         characterAnimator = GetComponent<Animator>();
+        _audioSource = GetComponent<AudioSource>();
     }
     
     void Start()
@@ -58,7 +60,7 @@ public class PlayerController : MonoBehaviour
         if(Input.GetKeyDown(KeyCode.P))
         {
             GameManager.instance.Pause();
-            SoundManager.instance.PlaySFX(SoundManager.instance.pauseAudio); 
+            SoundManager.instance.PlaySFX(_audioSource,SoundManager.instance.pauseAudio); 
         }
      }
 
@@ -109,7 +111,7 @@ public class PlayerController : MonoBehaviour
      {
         characterRigidbody.AddForce(Vector2.up * jumpForce, ForceMode2D.Impulse);
         characterAnimator.SetBool("IsJumping", true);   //no poner punto y coma. "=" asignar valor, "==" comprobar valor //todos los inputs de booleana necesitas un "If"
-        SoundManager.instance.PlaySFX(SoundManager.instance.jumpAudio); 
+        SoundManager.instance.PlaySFX(_audioSource,SoundManager.instance.jumpAudio); 
     }
     
 
@@ -166,7 +168,7 @@ public class PlayerController : MonoBehaviour
         else 
         {
             characterAnimator.SetTrigger("IsHurt"); 
-            SoundManager.instance.PlaySFX(SoundManager.instance.hurtAudio); 
+            SoundManager.instance.PlaySFX(_audioSource,SoundManager.instance.hurtAudio); 
         }
         
 

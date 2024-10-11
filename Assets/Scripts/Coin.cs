@@ -15,7 +15,7 @@ public class Coin : MonoBehaviour
         if(Input.GetKeyDown(KeyCode.E) && interactable)
         {
             GameManager.instance.Addcoin();
-            SoundManager.instance.PlaySFX(SoundManager.instance.coinAudio); //froma de acceder al script de sound manager muy epico
+            SoundManager.instance.PlaySFX( SoundManager.instance._audioSource ,SoundManager.instance.coinAudio); //froma de acceder al script de sound manager muy epico
             Destroy(gameObject);
         }
     }

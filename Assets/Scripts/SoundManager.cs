@@ -4,15 +4,21 @@ using UnityEngine;
 
 public class SoundManager : MonoBehaviour
 {
+
+    //Es mejor hacer un array e ir indivisualmente a cada objeto que emita sonidos y añadirle el script de sonidos junto al de sound manager. Y vas eliginedo los audios en cuestion
     public static SoundManager instance;
 
-    private AudioSource _audioSource;
+    public AudioSource _audioSource;
     public AudioClip coinAudio;
     public AudioClip jumpAudio;
 
     public AudioClip hurtAudio;
 
     public AudioClip pauseAudio;
+
+    public AudioClip mimicAudio;
+
+
 
     void Awake()
     {
@@ -34,9 +40,9 @@ public class SoundManager : MonoBehaviour
         _audioSource.PlayOneShot(_coinAudio);
     }*/
 
-    public void PlaySFX(AudioClip clip)
+    public void PlaySFX(AudioSource source, AudioClip clip)
     {
-        _audioSource.PlayOneShot(clip);
+        source.PlayOneShot(clip);
     }
 
 
