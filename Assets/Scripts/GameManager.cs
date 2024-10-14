@@ -15,7 +15,10 @@ public class GameManager : MonoBehaviour
 
     [SerializeField] GameObject _pauseCanvas;
 
-    [SerializeField] Text _starText;
+     [SerializeField] Text _starText;
+    //[SerializeField] Image[] countStars;
+
+    
 
 
     void Awake()
@@ -29,7 +32,14 @@ public class GameManager : MonoBehaviour
             instance = this;
         }
 
+        
+
     }
+
+
+
+
+    
 
     public void Pause()
     {
@@ -56,7 +66,9 @@ public class GameManager : MonoBehaviour
     public void Addstar()
     {
         star++;
-        _starText.text = star.ToString();
+        //_starText.text = star.ToString();
+        
+
     }
 
 
