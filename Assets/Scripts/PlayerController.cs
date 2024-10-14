@@ -54,7 +54,8 @@ public class PlayerController : MonoBehaviour
 
         if(Input.GetButtonDown("Fire1") && GroundSensor.isGrounded && !isAttacking)
         {
-            Attack();
+            //Attack();
+            StartAttack();
         }
 
         if(Input.GetKeyDown(KeyCode.P))
@@ -116,7 +117,7 @@ public class PlayerController : MonoBehaviour
     
 
 
-    void Attack()
+   /* void Attack()
     {
         StartCoroutine(AttackAnimation());
         if(horizontalInput!=0) characterAnimator.SetBool("IsRunning", true);
@@ -153,8 +154,36 @@ public class PlayerController : MonoBehaviour
         
 
         isAttacking = false;
-    }
+    }*/
     
+    void StartAttack()
+    {
+        isAttacking = true;
+        characterAnimator.SetTrigger("Attack");
+    }
+
+    void Attack()
+    {
+        Collider2D[] collider = Physics2D.OverlapCircleAll(attackHitBox.position, attackRadius);
+        foreach(Collider2D enemy in collider)
+       {
+            if(enemy.gameObject.CompareTag("Mimic")) //mejor forma de utilizar los tags
+            {
+            //Destroy(enemy.gameObject);
+            Rigidbody2D enemyRigidbody = enemy.GetComponent<Rigidbody2D>();
+            enemyRigidbody.AddForce(transform.right + transform.up * 2, ForceMode2D.Impulse);
+            
+            Mimic mimic = enemy.GetComponent<Mimic>();
+
+            mimic.TakeDamage();
+            }
+       }
+    }
+
+    void EndAttack()
+    {
+        isAttacking = false;
+    }
   
     void TakeDamage(int damage)
     {
