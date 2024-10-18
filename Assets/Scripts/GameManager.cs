@@ -18,6 +18,9 @@ public class GameManager : MonoBehaviour
      [SerializeField] Text _starText;
     //[SerializeField] Image[] countStars;
 
+    private Animator _pausePanelAnimator;
+    private bool _pauseAnimation;
+
     
 
 
@@ -32,6 +35,8 @@ public class GameManager : MonoBehaviour
             instance = this;
         }
 
+        _pausePanelAnimator=_pauseCanvas.GetComponentInChildren<Animator>();
+
         
 
     }
@@ -43,17 +48,16 @@ public class GameManager : MonoBehaviour
 
     public void Pause()
     {
-        if(!isPaused)
+        if(!isPaused && !_pauseAnimation)
         {
-            Time.timeScale = 0;
             isPaused = true;
+            Time.timeScale = 0;
             _pauseCanvas.SetActive(true);
         }
-        else 
+        else if(isPaused && !_pauseAnimation)
         {
-            Time.timeScale = 1;
-            isPaused = false;
-            _pauseCanvas.SetActive(false);
+          _pauseAnimation = true;
+          StartCoroutine(ClosePauseAnimation());
 
         }
     }
@@ -69,6 +73,19 @@ public class GameManager : MonoBehaviour
         //_starText.text = star.ToString();
         
 
+    }
+
+    IEnumerator ClosePauseAnimation()
+    {
+        _pausePanelAnimator.SetBool("Close", true);
+
+        yield return new WaitForSecondsRealtime(0.20f);
+
+        Time.timeScale = 1;
+        _pauseCanvas.SetActive(false);
+
+        isPaused = false;
+        _pauseAnimation = false;
     }
 
 
