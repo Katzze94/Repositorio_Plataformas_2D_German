@@ -11,7 +11,9 @@ public class PlayerController : MonoBehaviour
 
     private float horizontalInput;
 
-    [SerializeField] private int healthPoints = 3;
+    public  int _currentHealth {get; private set;}
+
+    public  int _maxHealth {get; private set;} = 5;
 
     [SerializeField] private float characterSpeed = 4.5f;  //"f" para que el numero se entienda el float y solo si es decimal sino no hace falta
 
@@ -29,6 +31,8 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private float attackRadius = 1;
     // [SerializeField]:Para que las variables privadas salgan en el inspector
     // Start is called before the first frame update
+
+
    
    void Awake()
     {
@@ -40,6 +44,10 @@ public class PlayerController : MonoBehaviour
     void Start()
     {
         //characterRigidbody.AddForce(Vector2.up * jumpForce); //si lo que después del punto es minuscula es igual, si es mayúscula es parentesis
+        _currentHealth= _maxHealth;
+
+        GameManager.instance.SetHealthBar(_maxHealth);
+   
     }
 
     void Update()
@@ -187,9 +195,11 @@ public class PlayerController : MonoBehaviour
   
     void TakeDamage(int damage)
     {
-        healthPoints -= damage;
+        _currentHealth -= damage;
 
-        if(healthPoints <= 0) 
+        GameManager.instance.UpdateHealthBar(_currentHealth);
+
+        if(_currentHealth <= 0) 
         {
             Die();  //resta de 1 en 1 al valor actual
         }
@@ -199,19 +209,20 @@ public class PlayerController : MonoBehaviour
             characterAnimator.SetTrigger("IsHurt"); 
             SoundManager.instance.PlaySFX(_audioSource,SoundManager.instance.hurtAudio); 
         }
-        
-
-        
-             
     }
-    
+     void HealthUp(int health)
+    {
+        if(_currentHealth<_maxHealth)
+        {
+            _currentHealth+=health;
+            GameManager.instance.UpdateHealthBar(_currentHealth);
+        }
+    }
     void Die()
     {
         characterAnimator.SetTrigger("IsDead");
         Destroy(gameObject, 0.47f);
     }
-    
-    
      void OnCollisionEnter2D(Collision2D collision)
     {
         if(collision.gameObject.layer == 3)
@@ -222,7 +233,15 @@ public class PlayerController : MonoBehaviour
            // Destroy(gameObject, 0.48f);
         }
     }
+       void OnTriggerEnter2D(Collider2D collider)
+    {
+        if(collider.gameObject.CompareTag("Health"))
+        {
+            HealthUp(1);
+            Destroy(collider.gameObject);
+        }
 
+    }
     void OnDrawGizmos()
     {
         Gizmos.color = Color.red;

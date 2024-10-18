@@ -2,25 +2,29 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.SceneManagement;
 
 public class GameManager : MonoBehaviour
 {
     public static GameManager instance;
     private int coins = 0;
 
-    private int star = 0;
+    private int currentStars = 0;
 
     [SerializeField] Text _coinText;
     private bool isPaused;
 
     [SerializeField] GameObject _pauseCanvas;
 
-     [SerializeField] Text _starText;
-    //[SerializeField] Image[] countStars;
+    
+    [SerializeField] Image[] hudStars;
+
+    [SerializeField] Sprite brightStar;
 
     private Animator _pausePanelAnimator;
-    private bool _pauseAnimation;
+    [SerializeField]private bool _pauseAnimation;
 
+    [SerializeField]private Slider _healthBar;
     
 
 
@@ -40,11 +44,6 @@ public class GameManager : MonoBehaviour
         
 
     }
-
-
-
-
-    
 
     public void Pause()
     {
@@ -67,10 +66,21 @@ public class GameManager : MonoBehaviour
         _coinText.text = coins.ToString();
     }
 
+
+
+    public void SetHealthBar(int _maxHealth)
+    {
+        _healthBar.maxValue = _maxHealth;
+        _healthBar.value = _maxHealth;
+    }
     public void Addstar()
     {
-        star++;
-        //_starText.text = star.ToString();
+        
+        if(currentStars<5)
+        {
+        hudStars[currentStars].sprite=brightStar;
+        currentStars+=1;
+        }
         
 
     }
@@ -88,5 +98,15 @@ public class GameManager : MonoBehaviour
         _pauseAnimation = false;
     }
 
+
+    public void UpdateHealthBar(int health)
+    {
+        _healthBar.value = health;
+    }
+
+    public void SceneLoader(string sceneName)
+    {
+        SceneManager.LoadScene(sceneName);
+    }
 
 }
