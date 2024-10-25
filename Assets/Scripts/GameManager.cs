@@ -17,6 +17,8 @@ public class GameManager : MonoBehaviour
     [SerializeField] GameObject _pauseCanvas;
 
     
+
+    
     [SerializeField] Image[] hudStars;
 
     [SerializeField] Sprite brightStar;
@@ -108,5 +110,6 @@ public class GameManager : MonoBehaviour
     {
         SceneManager.LoadScene(sceneName);
     }
+
 
 }
