@@ -44,4 +44,6 @@ public class BGMManager : MonoBehaviour
    {
     _audioSource.Pause();
    }
+
+ 
 }
