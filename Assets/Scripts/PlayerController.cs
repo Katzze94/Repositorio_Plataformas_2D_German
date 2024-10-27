@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class PlayerController : MonoBehaviour
 {
@@ -222,6 +223,8 @@ public class PlayerController : MonoBehaviour
     {
         characterAnimator.SetTrigger("IsDead");
         Destroy(gameObject, 0.47f);
+        SceneLoader("Game Over");
+
     }
      void OnCollisionEnter2D(Collision2D collision)
     {
@@ -241,10 +244,20 @@ public class PlayerController : MonoBehaviour
             Destroy(collider.gameObject);
         }
 
+        if(collider.gameObject.CompareTag("Void"))
+        {
+            SceneLoader("Game Over");
+        }
+
     }
     void OnDrawGizmos()
     {
         Gizmos.color = Color.red;
         Gizmos.DrawWireSphere(attackHitBox.position, attackRadius);
+    }
+
+    public void SceneLoader(string sceneName)
+    {
+        SceneManager.LoadScene(sceneName);
     }
 }

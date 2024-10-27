@@ -83,6 +83,11 @@ public class GameManager : MonoBehaviour
         hudStars[currentStars].sprite=brightStar;
         currentStars+=1;
         }
+
+        if(currentStars == 5)
+        {
+            SceneLoader("Victory");
+        }
         
 
     }
